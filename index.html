@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>캐릭터 카드</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            cursor: pointer;
+            background-color: #000;
+        }
+
+        #imageContainer {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #toggleImage {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+            transition: opacity 0.3s ease;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="imageContainer">
+        <img id="toggleImage" src="" alt="캐릭터 카드">
+    </div>
+
+    <script>
+        // URL 파라미터로 캐릭터 번호를 받습니다 (예: ?char=1)
+        const urlParams = new URLSearchParams(window.location.search);
+        const charNumber = urlParams.get('char') || '1';
+        
+        const image = document.getElementById('toggleImage');
+        const container = document.getElementById('imageContainer');
+        
+        // 이미지 경로 설정 (images 폴더에 있는 이미지 사용)
+        const imageFront = `images/char${charNumber}-front.png`;
+        const imageBack = `images/char${charNumber}-back.png`;
+        
+        let isShowingFront = true;
+
+        // 처음부터 앞면 표시
+        image.src = imageFront;
+        image.style.opacity = '1';
+
+        container.addEventListener('click', function() {
+            // 클릭할 때마다 앞뒤 토글
+            if (isShowingFront) {
+                image.src = imageBack;
+            } else {
+                image.src = imageFront;
+            }
+            isShowingFront = !isShowingFront;
+        });
+
+        // 이미지 로드 실패 시 처리
+        image.addEventListener('error', function() {
+            console.error('이미지를 불러올 수 없습니다:', image.src);
+            // JPG 확장자로 재시도
+            if (image.src.includes('.png')) {
+                image.src = image.src.replace('.png', '.jpg');
+            }
+        });
+    </script>
+</body>
+</html>
